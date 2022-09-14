@@ -73,7 +73,7 @@ class HBNBCommand(cmd.Cmd):
                 pline = pline[2].strip()  # pline is now str
                 if pline:
                     # check for *args or **kwargs
-                    if pline[0] is '{' and pline[-1] is'}'\
+                    if pline[0] is '{' and pline[-1] is '}'\
                             and type(eval(pline)) is dict:
                         _args = pline
                     else:
@@ -118,13 +118,52 @@ class HBNBCommand(cmd.Cmd):
         if not args:
             print("** class name missing **")
             return
-        elif args not in HBNBCommand.classes:
-            print("** class doesn't exist **")
-            return
-        new_instance = HBNBCommand.classes[args]()
+        elif args:
+            params = args.split(' ')
+            command = params[0]
+            if command not in HBNBCommand.classes:
+                print("** class doesn't exist **")
+                return
+            else:
+                param_dict = {}
+                for param in params[1:]:
+                    if len(param.split('=')) == 2:
+                        param_key, raw_param_val = param.split('=')
+                        param_val = raw_param_val[1:-1]
+                        # print(f"param: {param}")
+                        if isinstance(eval(raw_param_val), int):
+                            # print(f"{param_key}:{int(raw_param_val)}")
+                            # TODO: Possible bug - param_key not valid dict key
+                            #       Assume param_key is a string
+                            param_dict[param_key] = int(raw_param_val)
+                        if '"' in raw_param_val:
+                            # Test if <value> is string
+                            # Replace '_' with ' '
+                            param_val = param_val.replace('_', ' ')
+                            # print(f"{param_key}:{param_val}")
+                            param_dict[param_key] = param_val
+                        elif '.' in raw_param_val:
+                            # Test if <value> is float
+                            try:
+                                # print(f"{param_key}:{float(raw_param_val)}")
+                                param_dict[param_key] = float(raw_param_val)
+                                pass
+                            except ValueError:
+                                pass
+                                # print(f"not float: {raw_param_val}")
+                        else:
+                            pass
+                            # Doesn't fit in the above category
+                            # print(f"{param_key}:{param_val}")
+                        # print(param.split('='))
+        # print(param_dict)
+        new_instance = HBNBCommand.classes[command]()
+        for k, v in param_dict.items():
+            new_instance.__dict__[k] = v
+        print(new_instance.__dict__)
         storage.save()
-        print(new_instance.id)
-        storage.save()
+        # print(new_instance.id)
+        # storage.save()
 
     def help_create(self):
         """ Help information for the create method """
@@ -319,6 +358,7 @@ class HBNBCommand(cmd.Cmd):
         """ Help information for the update class """
         print("Updates an object with new information")
         print("Usage: update <className> <id> <attName> <attVal>\n")
+
 
 if __name__ == "__main__":
     HBNBCommand().cmdloop()
