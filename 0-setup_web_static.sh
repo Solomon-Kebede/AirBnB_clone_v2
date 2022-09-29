@@ -25,7 +25,7 @@ mkdir -p "/data/web_static/"
 mkdir -p "/data/web_static/releases/"
 mkdir -p "/data/web_static/shared/"
 mkdir -p "/data/web_static/releases/test/"
-echo "Some fake html file" > "/data/web_static/releases/test/index.html"
+echo "<html><head></head><body>Some fake html file</body></html>" > "/data/web_static/releases/test/index.html"
 ln -sf "/data/web_static/releases/test/" "/data/web_static/current"
 chown -R "ubuntu:ubuntu" "/data/"
 sudo sed -i '47i\\n\location /hbnb_static {\n\talias /data/web_static/current/;\n\t}/g' /etc/nginx/sites-available/default
