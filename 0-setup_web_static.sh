@@ -28,5 +28,5 @@ mkdir -p "/data/web_static/releases/test/"
 echo "Some fake html file" > "/data/web_static/releases/test/index.html"
 ln -sf "/data/web_static/releases/test/" "/data/web_static/current"
 chown -R "ubuntu:ubuntu" "/data/"
-sudo sed -i 's/server_name _;/server_name _;location /hbnb_static {alias /data/web_static/current/;autoindex off;}/g' /etc/nginx/sites-available/default
+sudo sed -i 's/server_name _;/serverx_name _;\nlocation /hbnb_static {\n\talias /data/web_static/current/;\n\t}/g' /etc/nginx/sites-available/default
 sudo service nginx restart
