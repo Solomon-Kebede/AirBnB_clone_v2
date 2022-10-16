@@ -33,6 +33,8 @@ def ctext(text):
     '''Returns a subdirectory page of C'''
     if '_' in text:
         result = text.replace('_', ' ')
+    else:
+        result = text
     return 'C {}'.format(result)
 
 if __name__ == '__main__':
